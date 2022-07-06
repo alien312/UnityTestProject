@@ -23,26 +23,8 @@ public class IKController : MonoBehaviour
             //Если, мы включили IK, устанавливаем позицию и вращение
             if(ikActive)
             {
-                //Ищем интерактивные объекты
-                var hints = Physics.SphereCastAll(transform.position, 2f, transform.forward, 5, LayerMask);
-                if (hints.Length != 0)
-                {
-                    var minDist = float.MaxValue;
-                    //Ищем ближайший объект
-                    foreach (var hint in hints)
-                    {
-                        var dist = Vector3.Distance(transform.position, hint.transform.position);
-                        if (dist <= minDist)
-                        {
-                            lookObj = hint.transform;
-                            minDist = dist;
-                        }
-                    }
-                }
-                else
-                {
-                    lookObj = null;
-                }
+                //FindInteractiveObject();
+                
                 // Устанавливаем цель взгляда для головы
                 if(lookObj != null)
                 {
@@ -56,6 +38,7 @@ public class IKController : MonoBehaviour
                     _animator.SetIKRotationWeight(AvatarIKGoal.RightHand,1);
                     _animator.SetIKPosition(AvatarIKGoal.RightHand,rightHandObj.position);
                     _animator.SetIKRotation(AvatarIKGoal.RightHand,rightHandObj.rotation);
+                    
                 }
                 // Устанавливаем цель для правой руки и выставляем её в позицию
                 if(leftHandObj != null)
@@ -76,4 +59,27 @@ public class IKController : MonoBehaviour
         }
     }
 
+    private void FindInteractiveObject()
+    {
+        //Ищем интерактивные объекты
+        var hints = Physics.SphereCastAll(transform.position, 2f, transform.forward, 5, LayerMask);
+        if (hints.Length != 0)
+        {
+            var minDist = float.MaxValue;
+            //Ищем ближайший объект
+            foreach (var hint in hints)
+            {
+                var dist = Vector3.Distance(transform.position, hint.transform.position);
+                if (dist <= minDist)
+                {
+                    lookObj = hint.transform;
+                    minDist = dist;
+                }
+            }
+        }
+        else
+        {
+            lookObj = null;
+        }
+    }
 }
